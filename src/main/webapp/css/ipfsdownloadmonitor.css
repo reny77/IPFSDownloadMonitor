@@ -1,0 +1,13 @@
+.content-wrapper,
+.main-footer {
+  margin-left: 0px;
+}
+
+.main-header .navbar {
+    margin-left: 0px;
+}
+
+.main-header .logo {
+    text-align: center;
+    width: 100%;
+}
