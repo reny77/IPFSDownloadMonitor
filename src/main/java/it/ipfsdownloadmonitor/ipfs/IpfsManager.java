@@ -38,13 +38,17 @@ public class IpfsManager {
 	
 	private Map<String, Contributor> contributorMap = new HashMap<>(); 
 
-	private List<Long> kbProgress = new ArrayList<>();
+	private List<Double> kbProgress = new ArrayList<>();
 	
 	private static IpfsManager _INSTANCE = new IpfsManager();
 	
+	Thread updatePeersTh = null;
+	Thread downloadTh = null;
+	Thread updateProgressTh = null;
 	
 	private IpfsManager() {
-		new Thread(updatePeers).start();
+		updatePeersTh = new Thread(updatePeersRunnable);
+		updatePeersTh.start();
 	}
 	
 	public static synchronized IpfsManager getInstance() {
@@ -62,6 +66,10 @@ public class IpfsManager {
 	}
 	
 	public void stopDownload() {
+		if (downloadTh != null) {
+			downloadTh.interrupt();
+		}
+		
 		ipfs = null;
 		downloadRun = false;
 		filePointer = null;
@@ -90,7 +98,6 @@ public class IpfsManager {
 			humanReadble = Utility.humanReadableByteCountBin(size.longValue());
 		}
 		
-		logger.info("CumulativeSize: {}", humanReadble);
 		//		
 		Map fileLs = ipfs.file.ls(filePointer);
 		Map objects = (Map) fileLs.get("Objects");
@@ -101,11 +108,14 @@ public class IpfsManager {
 		objectInfo.setStart(new Date());
 		logger.info("Type: {}", type);
 		
-		new Thread(downloadThread).start();
-		new Thread(updateProgress).start();
+		downloadTh = new Thread(downloadRunnable);
+		downloadTh.start();
+		updateProgressTh = new Thread(updateProgress);
+		updateProgressTh.start();
+		
 	}
 	
-	Runnable updatePeers = new Runnable() {
+	Runnable updatePeersRunnable = new Runnable() {
 		@Override
 		public void run() {
 			while (true) {
@@ -133,13 +143,13 @@ public class IpfsManager {
 				try {
 					if (downloadRun) {
 						// calculate total
-						Long recivedTotal = 0L;
+						Double recivedTotal = 0D;
 						List<Contributor> contributorList = new ArrayList<>(contributorMap.values());
 						for (Iterator iterator = contributorList.iterator(); iterator.hasNext();) {
 							Contributor contributor = (Contributor) iterator.next();
 							recivedTotal += contributor.getRecvLong();
 						}
-						kbProgress.add(recivedTotal);
+						kbProgress.add(recivedTotal/1024);
 					}
 				} catch(Throwable th) {
 					th.printStackTrace();
@@ -154,7 +164,7 @@ public class IpfsManager {
 	};
 	
 	
-	Runnable downloadThread = new Runnable() {
+	Runnable downloadRunnable = new Runnable() {
 		@Override
 		public void run() {
 			try {
@@ -177,7 +187,7 @@ public class IpfsManager {
 			
 			peersList = ipfs.swarm.peers();
 			for (Iterator iterator = peersList.iterator(); iterator.hasNext();) {
-
+				
 				Peer peerConnected = (Peer) iterator.next();
 				MultiAddress address = peerConnected.address;
 				Object streams = peerConnected.streams;
@@ -194,7 +204,7 @@ public class IpfsManager {
 				String value = ledgerMap.get("Value").toString();
 				if (!"0".equals(recv)) {
 					
-					logger.debug("" + ledgerMap);
+					//logger.debug("" + ledgerMap);
 					
 					String recvReadble = Utility.humanReadableByteCountBin(Long.valueOf(recv));
 					String sentReadble = Utility.humanReadableByteCountBin(Long.valueOf(sent));

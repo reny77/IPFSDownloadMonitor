@@ -36,7 +36,7 @@ function updateData() {
        }
     });	  
     
-    contributorsTable.ajax.reload();	  
+    contributorsTable.ajax.reload(null, true);	  
     
    
 }

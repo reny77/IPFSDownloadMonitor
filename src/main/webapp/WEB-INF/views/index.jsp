@@ -14,7 +14,6 @@
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
 			          <!-- general form elements -->
-			    
 			      <!-- Default box -->
 			      <div class="box box-primary">
 			        <div class="box-header with-border center">
@@ -22,22 +21,27 @@
 			        </div>
 			        <form class="form-horizontal" action="<c:url value="/download.htm"/>" method="get">
 				        <div class="box-body">
-				         	<div class=" input-group input-group-lg"> <!--has-error  -->
+				         	<div class="input-group input-group-lg <c:if test="${errorcid}">has-error</c:if>">
 				                <input type="text" class="form-control" name="cid" value="QmSnuWmxptJZdLJpKRarxBMS2Ju2oANVrgbr2xWbie9b2D">
 				                <span class="input-group-btn">
 				                	<button type="submit" class="btn btn-info btn-flat">Download</button>
 				                </span>
 				            </div>
 				            <div class="has-error input-group input-group-lg">
-				            	<!--  span class="help-block">The cid inserted is not correct</span -->
+				            <c:if test="${errorcid}"><span class="help-block">The cid inserted is not correct</span></c:if>
 				            </div>
 				        </div>
 			        </form>
 			        <!-- /.box-footer--> 
+			        <c:if test="${erroripfs}">
+				        <div class="alert alert-danger alert-dismissible">
+			                <h4><i class="icon fa fa-ban"></i> IPFS problem!</h4>
+			                Is IPFS daemon running?
+		              </div>
+		            </c:if>
 			      </div>
 			      <!-- /.box -->
 			</div>
-			<div class="col-md-3"></div>
 		</div>
     </section>
     <!-- /.content -->

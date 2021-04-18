@@ -13,7 +13,7 @@ public class DownloadStats {
 	private String recivedTotal = "";
 	private List<PieData> pieData;
 	private List<MapData> mapDataList = new ArrayList<>();
-	private List<Long> kbProgress = new ArrayList<>();
+	private List<Double> kbProgress = new ArrayList<>();
 	
 	private List<Contributor> contributorList;
 	
@@ -76,10 +76,10 @@ public class DownloadStats {
 	public List<MapData> getMapDataList() {
 		return mapDataList;
 	}
-	public void setKbProgress(List<Long> kbProgress) {
+	public void setKbProgress(List<Double> kbProgress) {
 		this.kbProgress = kbProgress;
 	}
-	public List<Long> getKbProgress() {
+	public List<Double> getKbProgress() {
 		return kbProgress;
 	}
 }
