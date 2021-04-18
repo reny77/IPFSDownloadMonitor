@@ -30,6 +30,25 @@
 				            <div class="has-error input-group input-group-lg">
 				            <c:if test="${errorcid}"><span class="help-block">The cid inserted is not correct</span></c:if>
 				            </div>
+				            <br>
+				            <div class="row">
+				        		<div class="col-xs-5">
+				                  <div class="form-group">
+					                  <label for="inHost" class="col-sm-2 control-label">host</label>
+					                  <div class="col-sm-10">
+					                    <input type="text" class="form-control" id="inHost" name="host" value="localhost">
+					                  </div>
+					                </div>
+				                </div>
+				                <div class="col-xs-3">
+				                  <div class="form-group">
+					                  <label for="inPort" class="col-sm-2 control-label">port</label>
+					                  <div class="col-sm-10">
+					                    <input type="text" class="form-control" id="inPort" name="port" value="5001">
+					                  </div>
+					                </div>
+				                </div>
+				              </div>
 				        </div>
 			        </form>
 			        <!-- /.box-footer--> 

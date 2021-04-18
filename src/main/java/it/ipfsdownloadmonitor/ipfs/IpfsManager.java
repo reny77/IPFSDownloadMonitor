@@ -69,7 +69,10 @@ public class IpfsManager {
 		if (downloadTh != null) {
 			downloadTh.interrupt();
 		}
-		
+			// fake: for close prev stream beacuse is a static method :(
+			if (ipfs != null) {
+				IPFS.closeget = true;
+			}
 		ipfs = null;
 		downloadRun = false;
 		filePointer = null;

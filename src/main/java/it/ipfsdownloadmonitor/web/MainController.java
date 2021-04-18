@@ -35,13 +35,13 @@ public class MainController {
 
 
 	@GetMapping("/download.htm")
-	public ModelAndView download(@RequestParam String cid) {
+	public ModelAndView download(@RequestParam String cid, @RequestParam String host, @RequestParam String port) {
 		logger.info("cid={}", cid);
 
 		
 
 		if (IpfsManager.getInstance().isDownloadRun()) {
-			ModelAndView andView = new ModelAndView("index");
+			ModelAndView andView = new ModelAndView("monitor");
 			andView.addObject("downloadrun", true);
 			return andView;
 		} else {
@@ -56,12 +56,8 @@ public class MainController {
 			
 			try {
 				IpfsManager.getInstance().stopDownload();
-				IpfsManager.getInstance().init("localhost", 5001);
-				try {
-					IpfsManager.getInstance().startDownload(cid);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				IpfsManager.getInstance().init(host, Integer.parseInt(port));
+				IpfsManager.getInstance().startDownload(cid);
 			} catch (Throwable th) {
 				ModelAndView andView = new ModelAndView("index");
 				andView.addObject("erroripfs", true);
