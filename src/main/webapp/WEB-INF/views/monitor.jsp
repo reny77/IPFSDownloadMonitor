@@ -119,7 +119,7 @@
             <div class="box-header with-border">
               <i class="fa fa-bar-chart-o"></i>
 
-              <h3 class="box-title">Download progress</h3>
+              <h3 class="box-title">Download progress (Kb every 10s)</h3>
 
               <div class="box-tools pull-right">
                 <div class="box-tools pull-right">
@@ -152,7 +152,6 @@
             <!-- /.box-header -->
 	            <div class="box-body">
 	            	<table id="contributorsTable" class="table table-bordered table-striped" style="width:100%">
-	            		<!-- <img src="https://www.countryflags.io/be/flat/16.png">	 -->
         				<thead>
 				            <tr>
 				                <th>Exchanged</th>

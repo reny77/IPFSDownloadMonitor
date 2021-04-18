@@ -30,6 +30,7 @@ function updateData() {
        $('.recivedTotaldownloadstats').html(data.recivedTotal);
        updatePie(data.pieData);
        redrawMap(data.mapDataList);
+       redrawLineChart(data.kbProgress);
        if (!data.runDownload) {
        		objectInfoData();
        }
@@ -147,35 +148,32 @@ $('#maprefresh').on('click', function (e) {
 	$.ajax({
         url: context + "downloadstats"
     }).then(function(data) {
-    	redrawLineChart();
+    	redrawLineChart(data.kbProgress);
     });		
 })
- function redrawLineChart() {
+ function redrawLineChart(data) {
   /*
      * LINE CHART
      * ----------
      */
     //LINE randomly generated data
 
-    var sin = [], cos = []
-    for (var i = 0; i < 14; i += 0.5) {
-      sin.push([i, Math.sin(i)])
-      cos.push([i, Math.cos(i)])
+    var dataline = []
+    for (var i = 0; i < data.length; i += 1) {
+      dataline.push([i*10, data[i]])
     }
+    
+    
     var line_data1 = {
-      data : sin,
+      data : dataline,
       color: '#3c8dbc'
-    }
-    var line_data2 = {
-      data : cos,
-      color: '#00c0ef'
     }
     
     $('#line-chart').empty();
     var linechart = null;
-    linechart = $.plot('#line-chart', [line_data1, line_data2], {
+    linechart = $.plot('#line-chart', [line_data1], {
       grid  : {
-        hoverable  : true,
+        hoverable  : false,
         borderColor: '#f3f3f3',
         borderWidth: 1,
         tickColor  : '#f3f3f3'
@@ -186,7 +184,7 @@ $('#maprefresh').on('click', function (e) {
           show: true
         },
         points    : {
-          show: true
+          show: false
         }
       },
       lines : {
@@ -194,10 +192,12 @@ $('#maprefresh').on('click', function (e) {
         color: ['#3c8dbc', '#f56954']
       },
       yaxis : {
-        show: true
+        show: true,
+        label: "Kb download",
       },
       xaxis : {
-        show: true
+        show: true,
+        label: "Time (10s)",
       }
     })
     //Initialize tooltip on hover
@@ -224,7 +224,26 @@ $('#maprefresh').on('click', function (e) {
  }
  
  
- 
+ var contributorsTable ;
+  $(function () {
+	  contributorsTable = $('#contributorsTable').DataTable( {
+	        "ajax": context + "contributors",
+	        "columns": [
+	        	{ "data": "exchanged" },
+	            { "data": "countryCode" },
+	            { "data": "countryName" },
+	            { "data": "city" },
+	            { "data": "ip" },
+	            { "data": "peer" },
+	            { "data": "recv" },
+	            { "data": "sent" }
+	        ],
+	        "order": [[ 0, "desc" ]],
+	        "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+   				$('td:eq(1)', nRow).html('<img src="https://www.countryflags.io/' + aData.countryCode + '/flat/16.png">');
+   			}
+	    } );
+  })
  
  
  

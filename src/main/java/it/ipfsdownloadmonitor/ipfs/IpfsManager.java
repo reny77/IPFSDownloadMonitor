@@ -38,6 +38,7 @@ public class IpfsManager {
 	
 	private Map<String, Contributor> contributorMap = new HashMap<>(); 
 
+	private List<Long> kbProgress = new ArrayList<>();
 	
 	private static IpfsManager _INSTANCE = new IpfsManager();
 	
@@ -53,11 +54,11 @@ public class IpfsManager {
 	public void init(String host, int port) {
 		// init ipfs client
 		ipfs = new IPFS(host, port);
-//		try {
-//			ipfs.repo.gc();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			ipfs.repo.gc();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void stopDownload() {
@@ -65,6 +66,8 @@ public class IpfsManager {
 		downloadRun = false;
 		filePointer = null;
 		objectInfo = null;
+		contributorMap = new HashMap<>(); 
+		kbProgress = new ArrayList<>();
 	}
 	
 	
@@ -99,6 +102,7 @@ public class IpfsManager {
 		logger.info("Type: {}", type);
 		
 		new Thread(downloadThread).start();
+		new Thread(updateProgress).start();
 	}
 	
 	Runnable updatePeers = new Runnable() {
@@ -114,6 +118,34 @@ public class IpfsManager {
 				}
 				try {
 					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	};
+	
+	
+	Runnable updateProgress = new Runnable() {
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					if (downloadRun) {
+						// calculate total
+						Long recivedTotal = 0L;
+						List<Contributor> contributorList = new ArrayList<>(contributorMap.values());
+						for (Iterator iterator = contributorList.iterator(); iterator.hasNext();) {
+							Contributor contributor = (Contributor) iterator.next();
+							recivedTotal += contributor.getRecvLong();
+						}
+						kbProgress.add(recivedTotal);
+					}
+				} catch(Throwable th) {
+					th.printStackTrace();
+				}
+				try {
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -178,9 +210,6 @@ public class IpfsManager {
 						contributor.setSent(sentReadble);
 						contributor.setValue(value);
 						
-						//contributor.id = id;
-						//contributor.latency = latency;
-						//contributor.muxer = muxer;
 						try {
 							GeoLiteManager.getInstance().resolve(contributor);
 						} catch (GeoIp2Exception e) {
@@ -248,10 +277,6 @@ public class IpfsManager {
 		downloadStats.setPieData(pieDataList);
 		
 		// calculate map
-//		List<PieData> pieDataList = new ArrayList<>();
-//		[
-//	      { latLng: [41.90, 12.45], name: 'Vatican City' },
-		// calculate pie
 		List<MapData> mapDataList = new ArrayList<>();
 		for (Iterator iterator = contributorList.iterator(); iterator.hasNext();) {
 			Contributor contributor = (Contributor) iterator.next();
@@ -263,6 +288,7 @@ public class IpfsManager {
 		}
 		downloadStats.setMapDataList(mapDataList);
 		
+		downloadStats.setKbProgress(kbProgress);
 		
 		if (objectInfo != null) {
 			long size = objectInfo.getSize();
