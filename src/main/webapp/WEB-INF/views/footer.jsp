@@ -322,18 +322,19 @@
 <script>
 var contributorsTable ;
   $(function () {
-	  contributorsTable = $('#example2').DataTable( {
+	  contributorsTable = $('#contributorsTable').DataTable( {
 	        "ajax": context + "contributors",
 	        "columns": [
+	        	{ "data": "exchanged" },
 	            { "data": "countryCode" },
 	            { "data": "countryName" },
 	            { "data": "city" },
 	            { "data": "ip" },
 	            { "data": "peer" },
 	            { "data": "recv" },
-	            { "data": "sent" },
-	            { "data": "exchanged" }
-	        ]
+	            { "data": "sent" }
+	        ],
+	        "order": [[ 0, "desc" ]]
 	    } );
   })
 </script>

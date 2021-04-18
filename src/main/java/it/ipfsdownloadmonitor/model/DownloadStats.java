@@ -1,5 +1,6 @@
 package it.ipfsdownloadmonitor.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DownloadStats {
@@ -11,6 +12,7 @@ public class DownloadStats {
 	private String percDownload = "";
 	private String recivedTotal = "";
 	private List<PieData> pieData;
+	private List<MapData> mapDataList = new ArrayList<>();
 	
 	private List<Contributor> contributorList;
 	
@@ -66,5 +68,11 @@ public class DownloadStats {
 	}
 	public List<PieData> getPieData() {
 		return pieData;
+	}
+	public void setMapDataList(List<MapData> mapDataList) {
+		this.mapDataList = mapDataList;
+	}
+	public List<MapData> getMapDataList() {
+		return mapDataList;
 	}
 }

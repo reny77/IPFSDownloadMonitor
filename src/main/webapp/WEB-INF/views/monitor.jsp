@@ -74,7 +74,7 @@
       
       
       
-      <%-- @ include file = "map.jsp" --%>
+     
       
       
       <div class="row">
@@ -104,6 +104,7 @@
                 <dd class="sizeHumanReadbleobjectinfo">-</dd>
                 
               </dl>
+              <a href="<c:url value="/canceldownload"/>" class="btn btn-block btn-danger btn-lg" role="button">Cancel download</a>
             </div>
             <!-- /.box-body -->
           </div>
@@ -111,17 +112,23 @@
         </div>
         
         
-        
       
-       <div class="col-xs-8">
-          <!-- interactive chart -->
+       <div class="col-md-8">
+          <!-- Line chart -->
           <div class="box box-primary">
             <div class="box-header with-border">
               <i class="fa fa-bar-chart-o"></i>
-              <h3 class="box-title">Interactive Area Chart</h3>
+
+              <h3 class="box-title">Download progress</h3>
+
+              <div class="box-tools pull-right">
+                <div class="box-tools pull-right">
+                <button id="progressrefresh" type="button" class="btn btn-box-tool"><i class="fa fa-refresh"></i></button>
+              </div>
+              </div>
             </div>
             <div class="box-body">
-              <div id="interactive" style="height: 300px;"></div>
+              <div id="line-chart" style="height: 300px;"></div>
             </div>
             <!-- /.box-body-->
           </div>
@@ -129,7 +136,7 @@
 
         </div>
         <!-- /.col -->
-        
+        <!-- /.col -->
         
         
         <!-- /.col -->
@@ -144,10 +151,11 @@
             </div>
             <!-- /.box-header -->
 	            <div class="box-body">
-	            	<table id="example2" class="table table-bordered table-striped" style="width:100%">
+	            	<table id="contributorsTable" class="table table-bordered table-striped" style="width:100%">
 	            		<!-- <img src="https://www.countryflags.io/be/flat/16.png">	 -->
         				<thead>
 				            <tr>
+				                <th>Exchanged</th>
 				                <th>Country Code</th>
 				                <th>Country</th>
 				                <th>City</th>
@@ -155,11 +163,11 @@
 				                <th>Peer</th>
 				                <th>Recv</th>
 				                <th>Sent</th>
-				                <th>Exchanged</th>
 				            </tr>
 				        </thead>
 				        <tfoot>
 				            <tr>
+				                <th>Exchanged</th>
 								<th>Country Code</th>
 				                <th>Country</th>
 				                <th>City</th>
@@ -167,7 +175,6 @@
 				                <th>Peer</th>
 				                <th>Recv</th>
 				                <th>Sent</th>
-				                <th>Exchanged</th>
 				            </tr>
 				        </tfoot>
 				    </table>
@@ -192,6 +199,8 @@
       
       	</div>
       </div>
+    
+     <%@ include file = "map.jsp"%>
     
     </section>
     <!-- /.content -->

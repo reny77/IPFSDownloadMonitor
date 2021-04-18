@@ -22,14 +22,14 @@
 			        </div>
 			        <form class="form-horizontal" action="<c:url value="/download.htm"/>" method="get">
 				        <div class="box-body">
-				         	<div class="has-error input-group input-group-lg">
+				         	<div class=" input-group input-group-lg"> <!--has-error  -->
 				                <input type="text" class="form-control" name="cid" value="QmSnuWmxptJZdLJpKRarxBMS2Ju2oANVrgbr2xWbie9b2D">
 				                <span class="input-group-btn">
 				                	<button type="submit" class="btn btn-info btn-flat">Download</button>
 				                </span>
 				            </div>
 				            <div class="has-error input-group input-group-lg">
-				            	<span class="help-block">The cid inserted is not correct</span>
+				            	<!--  span class="help-block">The cid inserted is not correct</span -->
 				            </div>
 				        </div>
 			        </form>

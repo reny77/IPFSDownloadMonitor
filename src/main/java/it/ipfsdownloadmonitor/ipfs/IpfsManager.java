@@ -21,6 +21,7 @@ import it.ipfsdownloadmonitor.commons.GeoLiteManager;
 import it.ipfsdownloadmonitor.commons.Utility;
 import it.ipfsdownloadmonitor.model.Contributor;
 import it.ipfsdownloadmonitor.model.DownloadStats;
+import it.ipfsdownloadmonitor.model.MapData;
 import it.ipfsdownloadmonitor.model.ObjectInfo;
 import it.ipfsdownloadmonitor.model.PieData;
 
@@ -52,11 +53,11 @@ public class IpfsManager {
 	public void init(String host, int port) {
 		// init ipfs client
 		ipfs = new IPFS(host, port);
-		try {
-			ipfs.repo.gc();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			ipfs.repo.gc();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void stopDownload() {
@@ -245,6 +246,23 @@ public class IpfsManager {
 			pieDataList.add(pieData);
 		}
 		downloadStats.setPieData(pieDataList);
+		
+		// calculate map
+//		List<PieData> pieDataList = new ArrayList<>();
+//		[
+//	      { latLng: [41.90, 12.45], name: 'Vatican City' },
+		// calculate pie
+		List<MapData> mapDataList = new ArrayList<>();
+		for (Iterator iterator = contributorList.iterator(); iterator.hasNext();) {
+			Contributor contributor = (Contributor) iterator.next();
+			MapData mapData = new MapData();
+			mapData.setName(contributor.getCity());
+			mapData.getLatLng()[0] = contributor.getLatitude();
+			mapData.getLatLng()[1] = contributor.getLongitude();
+			mapDataList.add(mapData);
+		}
+		downloadStats.setMapDataList(mapDataList);
+		
 		
 		if (objectInfo != null) {
 			long size = objectInfo.getSize();
